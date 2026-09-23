@@ -1,0 +1,82 @@
+<Window x:Class="AroundTheWorldClocks.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="World Clocks - Settings"
+        Width="520" Height="520" MinWidth="420" MinHeight="420"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="True">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Clocks" FontWeight="SemiBold" Margin="0,0,0,6" />
+
+        <!-- Clock list with reorder / remove -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ListBox x:Name="ClockList" />
+            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                <Button Content="Move up" Width="90" Margin="0,0,0,6" Click="OnMoveUpClick" />
+                <Button Content="Move down" Width="90" Margin="0,0,0,6" Click="OnMoveDownClick" />
+                <Button Content="Remove" Width="90" Click="OnRemoveClick" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Add a clock -->
+        <GroupBox Grid.Row="2" Header="Add clock" Margin="0,10,0,0" Padding="6">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Time zone:" VerticalAlignment="Center" Margin="0,0,8,6" />
+                <ComboBox x:Name="TimeZoneCombo" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,6"
+                          DisplayMemberPath="DisplayName" IsTextSearchEnabled="True"
+                          SelectionChanged="OnTimeZoneSelectionChanged" />
+
+                <TextBlock Grid.Row="1" Text="City name:" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <TextBox x:Name="CityNameBox" Grid.Row="1" Grid.Column="1" VerticalContentAlignment="Center" />
+                <Button Grid.Row="1" Grid.Column="2" Content="Add" Width="90" Margin="8,0,0,0" Click="OnAddClick" />
+            </Grid>
+        </GroupBox>
+
+        <!-- Appearance -->
+        <GroupBox Grid.Row="3" Header="Appearance" Margin="0,10,0,0" Padding="6">
+            <StackPanel>
+                <DockPanel Margin="0,0,0,6">
+                    <TextBlock Text="Clock size:" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <TextBlock DockPanel.Dock="Right" Width="40" TextAlignment="Right" VerticalAlignment="Center"
+                               Text="{Binding Value, ElementName=SizeSlider, StringFormat={}{0:0} px}" />
+                    <Slider x:Name="SizeSlider" Minimum="32" Maximum="160" TickFrequency="8"
+                            IsSnapToTickEnabled="True" VerticalAlignment="Center" />
+                </DockPanel>
+                <WrapPanel>
+                    <CheckBox x:Name="Use24HourBox" Content="24-hour time" Margin="0,0,16,0" />
+                    <CheckBox x:Name="SecondHandBox" Content="Second hand" Margin="0,0,16,0" />
+                    <CheckBox x:Name="VerticalBox" Content="Vertical layout" Margin="0,0,16,0" />
+                    <CheckBox x:Name="AlwaysOnTopBox" Content="Always on top" Margin="0,0,16,0" />
+                    <CheckBox x:Name="AutoStartBox" Content="Start with Windows" />
+                </WrapPanel>
+            </StackPanel>
+        </GroupBox>
+
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="OK" Width="80" IsDefault="True" Click="OnOkClick" />
+            <Button Content="Cancel" Width="80" Margin="8,0,0,0" IsCancel="True" />
+        </StackPanel>
+    </Grid>
+</Window>

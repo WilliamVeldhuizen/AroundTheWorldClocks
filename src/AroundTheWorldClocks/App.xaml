@@ -1,0 +1,12 @@
+<Application x:Class="AroundTheWorldClocks.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Startup="OnStartup"
+             ShutdownMode="OnMainWindowClose">
+    <Application.Resources>
+        <SolidColorBrush x:Key="WidgetBackground" Color="#CC1E1E1E" />
+        <SolidColorBrush x:Key="WidgetForeground" Color="#FFF0F0F0" />
+        <SolidColorBrush x:Key="WidgetSubtleForeground" Color="#FFA8A8A8" />
+        <SolidColorBrush x:Key="WidgetAccent" Color="#FFE8603C" />
+    </Application.Resources>
+</Application>
