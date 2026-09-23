@@ -52,6 +52,7 @@ public partial class WidgetWindow : Window
         _viewModel.Apply(_settings);
         Topmost = _settings.AlwaysOnTop;
         AlwaysOnTopMenuItem.IsChecked = _settings.AlwaysOnTop;
+        SecondHandMenuItem.IsChecked = _settings.ShowSecondHand;
 
         foreach (MenuItem item in ThemeMenuItem.Items)
             item.IsChecked = (WidgetTheme)item.Tag == _settings.Theme;
@@ -155,6 +156,13 @@ public partial class WidgetWindow : Window
             ApplySettings();
             SaveSettings();
         }
+    }
+
+    private void OnSecondHandClick(object sender, RoutedEventArgs e)
+    {
+        _settings.ShowSecondHand = SecondHandMenuItem.IsChecked;
+        ApplySettings();
+        SaveSettings();
     }
 
     private void OnAlwaysOnTopClick(object sender, RoutedEventArgs e)
