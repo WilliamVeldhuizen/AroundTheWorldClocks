@@ -1,0 +1,23 @@
+<Project Sdk="WixToolset.Sdk/5.0.2">
+  <!--
+    Per-user MSI for Around The World Clocks.
+    Build it with build-installer.ps1 in the repository root: that publishes the app first and passes
+    ProductVersion and AppPublishDir to this project.
+  -->
+  <PropertyGroup>
+    <ProductVersion Condition="'$(ProductVersion)' == ''">0.0.0</ProductVersion>
+    <AppPublishDir Condition="'$(AppPublishDir)' == ''">..\artifacts\publish\</AppPublishDir>
+    <OutputName>AroundTheWorldClocks-$(ProductVersion)</OutputName>
+    <InstallerPlatform>x64</InstallerPlatform>
+    <!--
+      ICE91: per-user files don't follow ALLUSERS; this package is per-user only by design.
+      ICE61: warns about AllowSameVersionUpgrades, which is intentional (see Package.wxs).
+    -->
+    <SuppressIces>ICE91;ICE61</SuppressIces>
+    <DefineConstants>ProductVersion=$(ProductVersion);AppPublishDir=$(AppPublishDir);AppIcon=..\src\AroundTheWorldClocks\Assets\app.ico</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Util.wixext" Version="5.0.2" />
+  </ItemGroup>
+</Project>

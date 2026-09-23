@@ -1,0 +1,66 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+
+  <!--
+    Per-user install: no admin rights needed.
+      App:        %LOCALAPPDATA%\Programs\AroundTheWorldClocks\AroundTheWorldClocks.exe
+      Shortcut:   Start menu (current user)
+      Auto start: HKCU\...\Run (on by default; install with AUTOSTART=0 to skip, or turn off in Settings)
+    Settings in %APPDATA%\AroundTheWorldClocks are left alone on uninstall.
+  -->
+  <Package Name="Around The World Clocks"
+           Manufacturer="William Veldhuizen"
+           Version="$(ProductVersion)"
+           UpgradeCode="7E0B4C52-3F1A-4B8E-9C2D-5A6F1E8D2B47"
+           Scope="perUser"
+           Compressed="yes">
+
+    <!-- Same-version upgrades too, so installing a rebuilt MSI replaces the installed copy instead of adding a second one. -->
+    <MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Icon Id="AppIcon" SourceFile="$(AppIcon)" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon" />
+    <Property Id="ARPNOMODIFY" Value="1" />
+    <Property Id="AUTOSTART" Value="1" />
+
+    <!-- Close a running widget (it saves its position on close) so its exe can be replaced or removed. -->
+    <util:CloseApplication Id="CloseWidget" Target="AroundTheWorldClocks.exe" CloseMessage="yes" RebootPrompt="no" TerminateProcess="0" />
+
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="UserProgramsFolder" Name="Programs">
+        <Directory Id="INSTALLFOLDER" Name="AroundTheWorldClocks" />
+      </Directory>
+    </StandardDirectory>
+
+    <Feature Id="Main" Title="Around The World Clocks">
+      <!-- Per-user components need an HKCU key path and explicit folder removal (ICE38 / ICE64). -->
+      <Component Id="AppExe" Directory="INSTALLFOLDER" Guid="3C5D8E21-9B47-4F6A-8D13-2E7B9C4A6F05">
+        <File Id="AppExeFile" Source="$(AppPublishDir)AroundTheWorldClocks.exe" />
+        <RegistryValue Root="HKCU" Key="Software\AroundTheWorldClocks" Name="InstallDir" Type="string" Value="[INSTALLFOLDER]" KeyPath="yes" />
+        <RemoveFolder Id="RemoveInstallFolder" Directory="INSTALLFOLDER" On="uninstall" />
+        <RemoveFolder Id="RemoveUserProgramsFolder" Directory="UserProgramsFolder" On="uninstall" />
+        <RemoveRegistryKey Root="HKCU" Key="Software\AroundTheWorldClocks" Action="removeOnUninstall" />
+      </Component>
+
+      <Component Id="StartMenuShortcut" Directory="ProgramMenuFolder">
+        <Shortcut Id="AppShortcut" Name="Around The World Clocks" Description="World clock desktop widget"
+                  Target="[INSTALLFOLDER]AroundTheWorldClocks.exe" WorkingDirectory="INSTALLFOLDER" Icon="AppIcon" />
+        <RegistryValue Root="HKCU" Key="Software\AroundTheWorldClocks" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+
+      <!-- Same value the app's "Start with Windows" setting writes, so the two stay in sync. -->
+      <Component Id="AutoStart" Directory="INSTALLFOLDER" Condition="AUTOSTART = 1">
+        <RegistryValue Root="HKCU" Key="Software\Microsoft\Windows\CurrentVersion\Run" Name="AroundTheWorldClocks"
+                       Type="string" Value="&quot;[INSTALLFOLDER]AroundTheWorldClocks.exe&quot;" KeyPath="yes" />
+      </Component>
+    </Feature>
+
+    <!-- Start the widget when installation finishes. -->
+    <CustomAction Id="LaunchWidget" Directory="INSTALLFOLDER" ExeCommand="&quot;[INSTALLFOLDER]AroundTheWorldClocks.exe&quot;"
+                  Execute="immediate" Return="asyncNoWait" Impersonate="yes" />
+    <InstallExecuteSequence>
+      <Custom Action="LaunchWidget" After="InstallFinalize" Condition="NOT REMOVE" />
+    </InstallExecuteSequence>
+  </Package>
+</Wix>
