@@ -1,0 +1,29 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:AroundTheWorldClocks.Controls">
+    <!-- Mid-century: warm grey panel, numerals 1-12, thin black hands, yellow seconds. Dial inverts at night. -->
+
+    <Style x:Key="PanelStyle" TargetType="Border">
+        <Setter Property="Background" Value="#E9E7E2" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="6,12" />
+        <!-- Room for the drop shadow inside the window bounds. -->
+        <Setter Property="Margin" Value="12" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="16" ShadowDepth="5" Direction="270" Opacity="0.25" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <DataTemplate x:Key="ClockItemTemplate">
+        <StackPanel Orientation="{Binding ItemOrientation}" Margin="8,2">
+            <controls:ClockFace Width="{Binding ClockSize}" Height="{Binding ClockSize}" HorizontalAlignment="Center" />
+            <StackPanel Margin="{Binding LabelMargin}" HorizontalAlignment="{Binding LabelAlignment}" VerticalAlignment="Center">
+                <TextBlock Text="{Binding DisplayName}" TextAlignment="{Binding LabelTextAlignment}"
+                           FontFamily="Segoe UI" FontSize="11.5" FontWeight="SemiBold" Foreground="#2A2A2A" />
+                <TextBlock TextAlignment="{Binding LabelTextAlignment}" FontFamily="Segoe UI" FontSize="11" Foreground="#77746C"><Run Text="{Binding TimeText, Mode=OneWay}" /><Run Text="{Binding DayOffsetText, Mode=OneWay}" Foreground="#C79400" /></TextBlock>
+            </StackPanel>
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>

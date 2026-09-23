@@ -10,6 +10,8 @@ public class WidgetSettings
 {
     public List<CityClock> Clocks { get; set; } = [];
 
+    public WidgetTheme Theme { get; set; } = WidgetTheme.MicaGlass;
+
     /// <summary>Diameter of each analog clock in device-independent pixels.</summary>
     public double ClockSize { get; set; } = 64;
 
@@ -36,6 +38,7 @@ public class WidgetSettings
     public WidgetSettings Clone() => new()
     {
         Clocks = Clocks.Select(c => c.Clone()).ToList(),
+        Theme = Theme,
         ClockSize = ClockSize,
         Use24HourFormat = Use24HourFormat,
         ShowSecondHand = ShowSecondHand,

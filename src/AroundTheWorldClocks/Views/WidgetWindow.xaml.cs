@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using AroundTheWorldClocks.Models;
@@ -29,6 +30,7 @@ public partial class WidgetWindow : Window
         _settings = store.Load();
 
         DataContext = _viewModel;
+        BuildThemeMenu();
         ApplySettings();
 
         _timer.Tick += OnTimerTick;
@@ -46,9 +48,41 @@ public partial class WidgetWindow : Window
 
     private void ApplySettings()
     {
+        ApplyTheme(_settings.Theme);
         _viewModel.Apply(_settings);
         Topmost = _settings.AlwaysOnTop;
         AlwaysOnTopMenuItem.IsChecked = _settings.AlwaysOnTop;
+
+        foreach (MenuItem item in ThemeMenuItem.Items)
+            item.IsChecked = (WidgetTheme)item.Tag == _settings.Theme;
+    }
+
+    /// <summary>Swaps in Themes/{theme}.xaml, which supplies the PanelStyle and ClockItemTemplate resources.</summary>
+    private void ApplyTheme(WidgetTheme theme)
+    {
+        var dictionary = new ResourceDictionary
+        {
+            Source = new Uri($"pack://application:,,,/Themes/{theme}.xaml", UriKind.Absolute),
+        };
+        Resources.MergedDictionaries.Clear();
+        Resources.MergedDictionaries.Add(dictionary);
+    }
+
+    private void BuildThemeMenu()
+    {
+        foreach (var option in WidgetThemes.All)
+        {
+            var item = new MenuItem { Header = option.Name, Tag = option.Theme, IsCheckable = true };
+            item.Click += OnThemeMenuClick;
+            ThemeMenuItem.Items.Add(item);
+        }
+    }
+
+    private void OnThemeMenuClick(object sender, RoutedEventArgs e)
+    {
+        _settings.Theme = (WidgetTheme)((MenuItem)sender).Tag;
+        ApplySettings();
+        SaveSettings();
     }
 
     private void OnTimerTick(object? sender, EventArgs e)

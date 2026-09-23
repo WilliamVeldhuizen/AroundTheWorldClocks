@@ -1,0 +1,63 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Retro Flip: split-flap digit tiles instead of an analog dial; the city in small capitals below. -->
+
+    <Style x:Key="PanelStyle" TargetType="Border">
+        <Setter Property="Background" Value="#B326262A" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="4,12" />
+    </Style>
+
+    <LinearGradientBrush x:Key="TileBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#26262A" Offset="0" />
+        <GradientStop Color="#26262A" Offset="0.5" />
+        <GradientStop Color="#1C1C1F" Offset="0.5" />
+        <GradientStop Color="#1C1C1F" Offset="1" />
+    </LinearGradientBrush>
+
+    <Style x:Key="TileText" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Bahnschrift, Segoe UI" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontSize" Value="{Binding FlipFontSize}" />
+        <Setter Property="Foreground" Value="#F3F3F3" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="6,5" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsNight}" Value="True">
+                <Setter Property="Foreground" Value="#B9BCD6" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="Tile" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource TileBrush}" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="6" ShadowDepth="3" Direction="270" Opacity="0.4" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <DataTemplate x:Key="ClockItemTemplate">
+        <StackPanel Orientation="{Binding ItemOrientation}" Margin="8,2">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Border Style="{StaticResource Tile}">
+                    <Grid>
+                        <TextBlock Text="{Binding HourText}" Style="{StaticResource TileText}" />
+                        <Rectangle Height="1" Fill="#B3000000" VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+                <Border Style="{StaticResource Tile}" Margin="3,0,0,0">
+                    <Grid>
+                        <TextBlock Text="{Binding MinuteText}" Style="{StaticResource TileText}" />
+                        <Rectangle Height="1" Fill="#B3000000" VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </StackPanel>
+            <TextBlock Margin="{Binding LabelMargin}" HorizontalAlignment="{Binding LabelAlignment}" VerticalAlignment="Center"
+                       TextAlignment="{Binding LabelTextAlignment}" FontFamily="Bahnschrift, Segoe UI" FontSize="10.5"
+                       Foreground="#DDDDDD" Typography.Capitals="AllSmallCaps"><Run Text="{Binding DisplayName, Mode=OneWay}" /><Run Text="{Binding DayOffsetText, Mode=OneWay}" Foreground="#FFB454" /></TextBlock>
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>

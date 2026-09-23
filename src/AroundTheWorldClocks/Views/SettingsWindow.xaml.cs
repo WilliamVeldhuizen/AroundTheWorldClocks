@@ -20,6 +20,8 @@ public partial class SettingsWindow : Window
         ClockList.ItemsSource = _clocks;
         TimeZoneCombo.ItemsSource = TimeZoneInfo.GetSystemTimeZones();
 
+        ThemeCombo.ItemsSource = WidgetThemes.All;
+        ThemeCombo.SelectedValue = settings.Theme;
         SizeSlider.Value = settings.ClockSize;
         Use24HourBox.IsChecked = settings.Use24HourFormat;
         SecondHandBox.IsChecked = settings.ShowSecondHand;
@@ -104,6 +106,7 @@ public partial class SettingsWindow : Window
     private void OnOkClick(object sender, RoutedEventArgs e)
     {
         Result.Clocks = _clocks.ToList();
+        Result.Theme = ThemeCombo.SelectedValue is WidgetTheme theme ? theme : WidgetTheme.MicaGlass;
         Result.ClockSize = SizeSlider.Value;
         Result.Use24HourFormat = Use24HourBox.IsChecked == true;
         Result.ShowSecondHand = SecondHandBox.IsChecked == true;

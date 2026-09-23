@@ -1,0 +1,25 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:AroundTheWorldClocks.Controls">
+    <!-- Swiss Railway: floating station clocks, no visible panel, labels in dark pills. -->
+
+    <Style x:Key="PanelStyle" TargetType="Border">
+        <!-- Almost transparent: fully transparent pixels would not receive the mouse for dragging. -->
+        <Setter Property="Background" Value="#01000000" />
+        <Setter Property="Padding" Value="8,6,8,10" />
+    </Style>
+
+    <DataTemplate x:Key="ClockItemTemplate">
+        <StackPanel Orientation="{Binding ItemOrientation}" Margin="8,4">
+            <controls:ClockFace Width="{Binding ClockSize}" Height="{Binding ClockSize}" HorizontalAlignment="Center">
+                <controls:ClockFace.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="4" Direction="270" Opacity="0.35" />
+                </controls:ClockFace.Effect>
+            </controls:ClockFace>
+            <Border Margin="{Binding LabelMargin}" HorizontalAlignment="{Binding LabelAlignment}" VerticalAlignment="Center"
+                    Background="#B80A0A0A" CornerRadius="9" Padding="9,1,9,2">
+                <TextBlock FontFamily="Bahnschrift, Segoe UI" FontSize="11.5" Foreground="White"><Run Text="{Binding DisplayName, Mode=OneWay}" FontWeight="SemiBold" /><Run Text=" " /><Run Text="{Binding TimeText, Mode=OneWay}" FontWeight="Light" /><Run Text="{Binding DayOffsetText, Mode=OneWay}" Foreground="#FF8A80" /></TextBlock>
+            </Border>
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>

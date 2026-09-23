@@ -1,0 +1,41 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:AroundTheWorldClocks.Controls">
+    <!-- Compact Strip: one slim bar; small clocks with city and time beside them, separated by hairlines. -->
+
+    <Style x:Key="PanelStyle" TargetType="Border">
+        <Setter Property="Background" Value="#D616181E" />
+        <Setter Property="BorderBrush" Value="#14FFFFFF" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="4,7" />
+    </Style>
+
+    <DataTemplate x:Key="ClockItemTemplate">
+        <Border BorderBrush="#1FFFFFFF">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <!-- Hairline before every item except the first: left edge in a strip, top edge in a column. -->
+                    <Setter Property="BorderThickness" Value="1,0,0,0" />
+                    <Setter Property="Padding" Value="12,0" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsVerticalWidget}" Value="True">
+                            <Setter Property="BorderThickness" Value="0,1,0,0" />
+                            <Setter Property="Padding" Value="8,6" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource PreviousData}}" Value="{x:Null}">
+                            <Setter Property="BorderThickness" Value="0" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <StackPanel Orientation="Horizontal">
+                <controls:ClockFace Width="{Binding SmallClockSize}" Height="{Binding SmallClockSize}" VerticalAlignment="Center" />
+                <StackPanel Margin="8,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding DisplayName}" FontFamily="Segoe UI Variable Text, Segoe UI" FontSize="11.5" FontWeight="SemiBold" Foreground="White" />
+                    <TextBlock FontFamily="Segoe UI Variable Text, Segoe UI" FontSize="11" Foreground="#A6FFFFFF"><Run Text="{Binding TimeText, Mode=OneWay}" /><Run Text="{Binding DayOffsetText, Mode=OneWay}" Foreground="#7FD3FF" /></TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+</ResourceDictionary>
