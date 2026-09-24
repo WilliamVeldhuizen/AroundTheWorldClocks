@@ -22,16 +22,17 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <ListBox x:Name="ClockList" />
+            <ListBox x:Name="ClockList" MouseDoubleClick="OnEditClick" />
             <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                <Button Content="Edit" Width="90" Margin="0,0,0,6" Click="OnEditClick" />
                 <Button Content="Move up" Width="90" Margin="0,0,0,6" Click="OnMoveUpClick" />
                 <Button Content="Move down" Width="90" Margin="0,0,0,6" Click="OnMoveDownClick" />
                 <Button Content="Remove" Width="90" Click="OnRemoveClick" />
             </StackPanel>
         </Grid>
 
-        <!-- Add a clock -->
-        <GroupBox Grid.Row="2" Header="Add clock" Margin="0,10,0,0" Padding="6">
+        <!-- Add or edit a clock -->
+        <GroupBox x:Name="ClockFormGroup" Grid.Row="2" Header="Add clock" Margin="0,10,0,0" Padding="6">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -50,7 +51,11 @@
 
                 <TextBlock Grid.Row="1" Text="City name:" VerticalAlignment="Center" Margin="0,0,8,0" />
                 <TextBox x:Name="CityNameBox" Grid.Row="1" Grid.Column="1" VerticalContentAlignment="Center" />
-                <Button Grid.Row="1" Grid.Column="2" Content="Add" Width="90" Margin="8,0,0,0" Click="OnAddClick" />
+                <Button x:Name="AddButton" Grid.Row="1" Grid.Column="2" Content="Add" Width="90" Margin="8,0,0,0" Click="OnAddClick" />
+                <StackPanel x:Name="EditButtons" Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Visibility="Collapsed">
+                    <Button Content="Save" Width="70" Margin="8,0,0,0" Click="OnSaveEditClick" />
+                    <Button Content="Cancel" Width="70" Margin="6,0,0,0" Click="OnCancelEditClick" />
+                </StackPanel>
             </Grid>
         </GroupBox>
 

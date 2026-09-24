@@ -10,6 +10,7 @@ public partial class SettingsWindow : Window
 {
     private readonly ObservableCollection<CityClock> _clocks;
     private string _suggestedCityName = "";
+    private CityClock? _editingClock;
 
     public SettingsWindow(WidgetSettings settings)
     {
@@ -78,11 +79,79 @@ public partial class SettingsWindow : Window
         _suggestedCityName = "";
     }
 
+    private void OnEditClick(object sender, RoutedEventArgs e)
+    {
+        if (ClockList.SelectedItem is not CityClock clock)
+            return;
+
+        _editingClock = clock;
+        var zone = FindTimeZone(clock.TimeZoneId);
+        TimeZoneCombo.SelectedItem = zone;
+        CityNameBox.Text = clock.DisplayName;
+        // Keep following the zone's suggested name only if the clock still uses it.
+        _suggestedCityName = zone is not null && clock.DisplayName == SuggestCityName(zone) ? clock.DisplayName : "";
+
+        ClockFormGroup.Header = "Edit clock";
+        AddButton.Visibility = Visibility.Collapsed;
+        EditButtons.Visibility = Visibility.Visible;
+        CityNameBox.Focus();
+        CityNameBox.SelectAll();
+    }
+
+    private TimeZoneInfo? FindTimeZone(string id)
+    {
+        var zones = (IEnumerable<TimeZoneInfo>)TimeZoneCombo.ItemsSource;
+        var zone = zones.FirstOrDefault(z => z.Id == id);
+        if (zone is null && TimeZoneInfo.TryConvertIanaIdToWindowsId(id, out var windowsId))
+            zone = zones.FirstOrDefault(z => z.Id == windowsId);
+        return zone;
+    }
+
+    private void OnSaveEditClick(object sender, RoutedEventArgs e)
+    {
+        if (_editingClock is null)
+            return;
+
+        if (TimeZoneCombo.SelectedItem is not TimeZoneInfo zone)
+        {
+            MessageBox.Show(this, "Select a time zone first.", Title, MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        int index = _clocks.IndexOf(_editingClock);
+        if (index >= 0)
+        {
+            var name = CityNameBox.Text.Trim();
+            var clock = new CityClock(name.Length > 0 ? name : SuggestCityName(zone), zone.Id);
+            _clocks[index] = clock;
+            ClockList.SelectedItem = clock;
+        }
+
+        EndEdit();
+    }
+
+    private void OnCancelEditClick(object sender, RoutedEventArgs e) => EndEdit();
+
+    private void EndEdit()
+    {
+        _editingClock = null;
+        TimeZoneCombo.SelectedItem = null;
+        CityNameBox.Text = "";
+        _suggestedCityName = "";
+
+        ClockFormGroup.Header = "Add clock";
+        AddButton.Visibility = Visibility.Visible;
+        EditButtons.Visibility = Visibility.Collapsed;
+    }
+
     private void OnRemoveClick(object sender, RoutedEventArgs e)
     {
         int index = ClockList.SelectedIndex;
         if (index < 0)
             return;
+
+        if (_clocks[index] == _editingClock)
+            EndEdit();
 
         _clocks.RemoveAt(index);
         ClockList.SelectedIndex = Math.Min(index, _clocks.Count - 1);

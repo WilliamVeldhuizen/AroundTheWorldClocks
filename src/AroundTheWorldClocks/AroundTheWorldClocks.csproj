@@ -8,7 +8,7 @@
     <UseWPF>true</UseWPF>
     <AssemblyTitle>Around The World Clocks</AssemblyTitle>
     <Product>Around The World Clocks</Product>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Company>William Veldhuizen</Company>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
   </PropertyGroup>
